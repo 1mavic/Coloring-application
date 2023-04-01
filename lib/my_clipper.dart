@@ -242,10 +242,10 @@ class MyCustomClipper extends CustomClipper<Path> {
   MyCustomClipper(this.myPath);
   @override
   Path getClip(Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final matrix = Matrix4.identity()..translate(center.dx, center.dy);
-    final scaledPath = myPath.transform(matrix.storage);
-    return scalePath(scaledPath, 15);
+    // final center = Offset(size.width / 2 + 18, size.height / 2 - 9);
+    // final matrix = Matrix4.identity()..translate(center.dx, center.dy);
+    // final scaledPath = myPath.transform(matrix.storage);
+    return scalePath(myPath, 16);
   }
 
   @override

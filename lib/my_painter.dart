@@ -18,18 +18,21 @@ class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 3;
+      ..strokeWidth = 20;
     Path path = Path();
     log(objects.length.toString());
     for (var element in objects) {
       if (element is Dot) {
         path.moveTo(element.point.dx, element.point.dy);
-        canvas.drawPoints(PointMode.points, [element.point], paint);
+        canvas.drawPoints(
+            PointMode.points, [element.point], paint..color = element.color);
       } else if (element is Line) {
         path.moveTo(element.start.dx, element.start.dy);
-        canvas.drawLine(element.start, element.end, paint);
+        canvas.drawLine(
+            element.start, element.end, paint..color = element.color);
+      } else if (element is FillColor) {
+        canvas.drawPaint(paint..color = element.color);
       }
     }
   }
@@ -70,9 +73,9 @@ Path scalePath(Path path, double scaleFactor) {
   final bounds = path.getBounds();
   final center = bounds.center;
   final matrix = Matrix4.identity()
-    ..translate(center.dx, center.dy)
-    ..scale(scaleFactor, scaleFactor)
-    ..translate(-center.dx, -center.dy);
+    // ..translate(center.dx, center.dy)
+    ..scale(scaleFactor, scaleFactor);
+  // ..translate(-center.dx, -center.dy);
   final scaledPath = path.transform(matrix.storage);
   return scaledPath;
 }
