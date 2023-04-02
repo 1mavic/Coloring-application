@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:coloring_app/brush_pick.dart';
+import 'package:coloring_app/color_picked.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_drawing/path_drawing.dart';
@@ -10,6 +12,9 @@ import 'package:coloring_app/color_provider.dart';
 import 'package:coloring_app/my_clipper.dart';
 import 'package:coloring_app/my_painter.dart';
 import 'package:coloring_app/picture_object.dart';
+
+// TODO: make fancy paint with pattern
+// remove brush
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +48,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Color _currentColor = Colors.black;
   bool _isFill = false;
+  int _size = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ColorInherit(
         color: _currentColor,
         isFill: _isFill,
+        size: _size,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -74,51 +81,46 @@ class _MyHomePageState extends State<MyHomePage> {
                 svgPath: "M6.3 1L9.5 7.22222L13.5 3.33333L17.5 15H1.5L6.3 1Z",
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 120),
-                child: Switch(
-                  value: _isFill,
-                  onChanged: (value) => setState(() {
-                    _isFill = value;
-                  }),
+            RepaintBoundary(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: ItemPickerWidget(
+                  onColorChange: (color) => setState(
+                    () {
+                      _currentColor = color;
+                    },
+                  ),
                 ),
               ),
             ),
-            Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  height: 100,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentColor = Colors.green;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.green,
-                        ),
-                      )),
-                      Expanded(
-                          child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _currentColor = Colors.red;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.red,
-                        ),
-                      )),
-                    ],
-                  ),
-                )),
+            RepaintBoundary(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: BrushPickWidget(
+                  onSizePick: (size) {
+                    setState(() {
+                      _size = size;
+                    });
+                  },
+                  onBrushPick: () {
+                    setState(() {
+                      _isFill = false;
+                    });
+                  },
+                  onPaintFillPick: () {
+                    setState(() {
+                      _isFill = true;
+                    });
+                  },
+                  onErasePick: () {
+                    setState(() {
+                      _isFill = false;
+                      _currentColor = Colors.transparent;
+                    });
+                  },
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -129,30 +131,33 @@ class _MyHomePageState extends State<MyHomePage> {
 class PaintObjects {
   const PaintObjects({
     required this.color,
+    required this.size,
   });
   final Color color;
+  final int size;
 }
 
 class Line extends PaintObjects {
   final Offset start;
   final Offset end;
 
-  Line(this.start, this.end, Color color) : super(color: color);
-  Line.fromPrev(this.end, PaintObjects prev, Color color)
+  Line(this.start, this.end, Color color, int size)
+      : super(color: color, size: size);
+  Line.fromPrev(this.end, PaintObjects prev, Color color, int size)
       : start = (prev is Dot)
             ? prev.point
             : (prev is Line)
                 ? prev.end
                 : end,
-        super(color: color);
+        super(color: color, size: size);
 }
 
 class Dot extends PaintObjects {
   final Offset point;
 
-  Dot(this.point, Color color) : super(color: color);
+  Dot(this.point, Color color, int size) : super(color: color, size: size);
 }
 
 class FillColor extends PaintObjects {
-  FillColor({required super.color});
+  FillColor({required super.color, required super.size});
 }
