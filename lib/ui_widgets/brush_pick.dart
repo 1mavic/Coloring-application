@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 
+/// widget with brush options
 class BrushPickWidget extends StatefulWidget {
+  /// widget with brush options
   const BrushPickWidget({
-    Key? key,
     required this.onBrushPick,
     required this.onPaintFillPick,
     required this.onErasePick,
     required this.onSizePick,
-  }) : super(key: key);
+    super.key,
+  });
+
+  /// user picked brush
   final VoidCallback onBrushPick;
+
+  /// user picked fill
   final VoidCallback onPaintFillPick;
+
+  /// user picked eraser
   final VoidCallback onErasePick;
-  final Function(int) onSizePick;
+
+  /// user changed point size callback
+  final void Function(int) onSizePick;
   @override
   State<BrushPickWidget> createState() => _BrushPickWidgetState();
 }

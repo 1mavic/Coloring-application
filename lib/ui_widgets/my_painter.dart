@@ -1,22 +1,23 @@
-import 'dart:developer';
 import 'dart:ui' as ui;
 
-import 'package:coloring_app/app_colors.dart';
 import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/models/paint_object.dart';
 
 import 'package:flutter/rendering.dart';
 // import 'package:flutter/material.dart';
 
+/// custom canvas painter for painting user input
 class MyPainter extends CustomPainter {
+  /// custom canvas painter for painting user input
   const MyPainter({
-    /// list of paint object to draw on canvas
     required this.objects,
   });
 
+  /// list of paint object to draw on canvas
   final List<PaintObject> objects;
   @override
   void paint(Canvas canvas, Size size) {
+    if (objects.isEmpty) return;
     final rect = Rect.fromCenter(
       center: Offset(size.width / 2, size.height / 2),
       width: size.width,
@@ -119,6 +120,7 @@ class MyPainter extends CustomPainter {
   bool shouldRebuildSemantics(MyPainter oldDelegate) => false;
 }
 
+/// scale icon path
 Path scalePath(Path path, double scaleFactor) {
   // final bounds = path.getBounds();
   // final center = bounds.center;

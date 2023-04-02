@@ -1,22 +1,40 @@
-import 'package:coloring_app/app_colors.dart';
-import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/models/app_color.dart';
-import 'package:coloring_app/models/paint_object.dart';
 import 'package:flutter/material.dart';
 
-class ItemPickerWidget extends StatefulWidget {
-  const ItemPickerWidget({
-    Key? key,
+/// widget with all colors options for user
+class ColorPickerWidget extends StatefulWidget {
+  ///
+  const ColorPickerWidget({
     required this.onColorChange,
-  }) : super(key: key);
-  final Function(CustomColor color) onColorChange;
+    required this.patternColors,
+    super.key,
+  });
+
+  /// user picked new color callback
+  final void Function(CustomColor color) onColorChange;
+
+  /// list of image patterns for color panel
+  final List<CustomColor> patternColors;
   @override
-  State<ItemPickerWidget> createState() => _ItemPickerWidgetState();
+  State<ColorPickerWidget> createState() => _ColorPickerWidgetState();
 }
 
-class _ItemPickerWidgetState extends State<ItemPickerWidget> {
-  final List<CustomColor> colorList = getAllColors();
+class _ColorPickerWidgetState extends State<ColorPickerWidget> {
+  final List<CustomColor> colorList = [];
   int pickedColorIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    colorList.addAll([...getAllColors(), ...widget.patternColors]);
+  }
+
+  @override
+  void didUpdateWidget(covariant ColorPickerWidget oldWidget) {
+    colorList
+      ..clear()
+      ..addAll([...getAllColors(), ...widget.patternColors]);
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +68,10 @@ class _ItemPickerWidgetState extends State<ItemPickerWidget> {
 
 class _PickerItem extends StatelessWidget {
   const _PickerItem({
-    Key? key,
     required this.color,
     required this.picked,
     required this.onTap,
-  }) : super(key: key);
+  });
   final CustomColor color;
   final bool picked;
   final VoidCallback onTap;
@@ -80,6 +97,7 @@ class _PickerItem extends StatelessWidget {
             pattern: (pattern) => BoxDecoration(
               image: DecorationImage(
                 image: Image.asset(pattern.asset).image,
+                fit: BoxFit.cover,
               ),
             ),
           ),
