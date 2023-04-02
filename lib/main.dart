@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:coloring_app/app_colors.dart';
 import 'package:coloring_app/brush_pick.dart';
 import 'package:coloring_app/color_picked.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color _currentColor = Colors.black;
+  AppColors _currentColor = AppColors.black;
   bool _isFill = false;
   int _size = 10;
 
@@ -115,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onErasePick: () {
                     setState(() {
                       _isFill = false;
-                      _currentColor = Colors.transparent;
+                      _currentColor = AppColors.erase;
                     });
                   },
                 ),
@@ -133,7 +134,7 @@ class PaintObjects {
     required this.color,
     required this.size,
   });
-  final Color color;
+  final AppColors color;
   final int size;
 }
 
@@ -141,9 +142,9 @@ class Line extends PaintObjects {
   final Offset start;
   final Offset end;
 
-  Line(this.start, this.end, Color color, int size)
+  Line(this.start, this.end, AppColors color, int size)
       : super(color: color, size: size);
-  Line.fromPrev(this.end, PaintObjects prev, Color color, int size)
+  Line.fromPrev(this.end, PaintObjects prev, AppColors color, int size)
       : start = (prev is Dot)
             ? prev.point
             : (prev is Line)
@@ -155,7 +156,7 @@ class Line extends PaintObjects {
 class Dot extends PaintObjects {
   final Offset point;
 
-  Dot(this.point, Color color, int size) : super(color: color, size: size);
+  Dot(this.point, AppColors color, int size) : super(color: color, size: size);
 }
 
 class FillColor extends PaintObjects {

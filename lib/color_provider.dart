@@ -1,3 +1,4 @@
+import 'package:coloring_app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ColorInherit extends InheritedWidget {
@@ -8,7 +9,7 @@ class ColorInherit extends InheritedWidget {
     required this.isFill,
     required this.size,
   }) : super(key: key, child: child);
-  final Color color;
+  final AppColors color;
   final bool isFill;
   final int size;
   @override
@@ -22,5 +23,5 @@ class ColorInherit extends InheritedWidget {
   bool updateShouldNotify(ColorInherit oldWidget) =>
       oldWidget.color != color ||
       oldWidget.isFill != isFill ||
-      oldWidget.size != oldWidget.size;
+      oldWidget.size != size;
 }

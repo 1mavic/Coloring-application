@@ -1,3 +1,5 @@
+import 'package:coloring_app/app_colors.dart';
+import 'package:coloring_app/const_data.dart';
 import 'package:flutter/material.dart';
 
 class ItemPickerWidget extends StatefulWidget {
@@ -5,22 +7,23 @@ class ItemPickerWidget extends StatefulWidget {
     Key? key,
     required this.onColorChange,
   }) : super(key: key);
-  final Function(Color color) onColorChange;
+  final Function(AppColors color) onColorChange;
   @override
   State<ItemPickerWidget> createState() => _ItemPickerWidgetState();
 }
 
 class _ItemPickerWidgetState extends State<ItemPickerWidget> {
-  final List<Color> colorList = [
-    Colors.black,
-    Colors.white,
-    Colors.green,
-    Colors.red,
-    Colors.yellow,
-    Colors.amber,
-    Colors.cyan,
-    Colors.orange,
-    Colors.purple,
+  final List<AppColors> colorList = [
+    AppColors.black,
+    AppColors.white,
+    AppColors.green,
+    AppColors.red,
+    AppColors.yellow,
+    AppColors.amber,
+    AppColors.cyan,
+    AppColors.orange,
+    AppColors.purple,
+    AppColors.gradient,
   ];
   int pickedColorIndex = 0;
 
@@ -61,7 +64,7 @@ class _PickerItem extends StatelessWidget {
     required this.picked,
     required this.onTap,
   }) : super(key: key);
-  final Color color;
+  final AppColors color;
   final bool picked;
   final VoidCallback onTap;
   @override
@@ -76,7 +79,11 @@ class _PickerItem extends StatelessWidget {
           curve: Curves.bounceOut,
           width: picked ? 100 : 80,
           height: 40,
-          color: color,
+          decoration: BoxDecoration(
+              color: color.color,
+              gradient: color == AppColors.gradient
+                  ? const LinearGradient(colors: AppConstData.gradients)
+                  : null),
         ),
       ),
     );

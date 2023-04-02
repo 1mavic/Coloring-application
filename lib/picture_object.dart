@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:ui' as ui;
 
+import 'package:coloring_app/app_colors.dart';
 import 'package:coloring_app/color_provider.dart';
 import 'package:coloring_app/main.dart';
 import 'package:coloring_app/my_clipper.dart';
@@ -24,13 +27,27 @@ class _PictureObjectState extends State<PictureObject> {
   final List<PaintObjects> objects = [];
   final List<PaintObjects> history = [];
   late Path _path;
+  ui.Image? image;
   @override
   void initState() {
     _path = parseSvgPath(
       widget.svgPath,
     );
-
+    getImage();
     super.initState();
+  }
+
+  Future<void> getImage() async {
+    Completer<ImageInfo> completer = Completer();
+    var img = AssetImage('assets/images/pattern.png');
+    img
+        .resolve(ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      completer.complete(info);
+    }));
+    ImageInfo imageInfo = await completer.future;
+    image = imageInfo.image;
+    setState(() {});
   }
 
   Path parseSvgPath(String svgPath) {
@@ -72,14 +89,14 @@ class _PictureObjectState extends State<PictureObject> {
                         if (provider?.isFill ?? false) {
                           objects.add(
                             FillColor(
-                              color: provider?.color ?? Colors.black,
+                              color: provider?.color ?? AppColors.black,
                               size: provider?.size ?? 10,
                             ),
                           );
                         } else {
                           objects.add(Dot(
                             details.localPosition,
-                            provider?.color ?? Colors.black,
+                            provider?.color ?? AppColors.black,
                             provider?.size ?? 10,
                           ));
                         }
@@ -90,7 +107,7 @@ class _PictureObjectState extends State<PictureObject> {
                         objects.add(Line.fromPrev(
                           details.localPosition,
                           objects.last,
-                          provider?.color ?? Colors.black,
+                          provider?.color ?? AppColors.black,
                           provider?.size ?? 10,
                         ));
                       });
@@ -102,10 +119,16 @@ class _PictureObjectState extends State<PictureObject> {
                       });
                     },
                     child: CustomPaint(
-                      painter: MyPainter(
-                        objects: objects,
-                        history: false,
-                      ),
+                      painter: image == null
+                          ? MyPainter(
+                              objects: objects,
+                              history: false,
+                            )
+                          : MyImagePainter(
+                              objects: objects,
+                              history: false,
+                              image: image!,
+                            ),
                       child: const SizedBox.expand(),
                     ),
                   ),
