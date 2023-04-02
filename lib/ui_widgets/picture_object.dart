@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:coloring_app/color_provider.dart';
 import 'package:coloring_app/models/paint_object.dart';
 import 'package:coloring_app/models/picture_part.dart';
+import 'package:coloring_app/screens/color_provider.dart';
 import 'package:coloring_app/ui_widgets/my_clipper.dart';
 import 'package:coloring_app/ui_widgets/my_painter.dart';
 import 'package:flutter/material.dart';

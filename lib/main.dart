@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/screens/coloring_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // TODO(macegora): math painted lines with template, to check on correct?
 
@@ -28,6 +30,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       title: 'Flutter Demo',
       theme: ThemeData(
         //

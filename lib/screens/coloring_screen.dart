@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/models/app_color.dart';
 import 'package:coloring_app/models/picture_part.dart';
 import 'package:coloring_app/screens/color_provider.dart';
@@ -71,7 +72,9 @@ class _ColoringScreenState extends State<ColoringScreen> {
   Widget build(BuildContext context) {
     //
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(S.of(context).testColoringPage),
+      ),
       body: ColorInherit(
         color: _currentColor,
         isFill: _isFill,
