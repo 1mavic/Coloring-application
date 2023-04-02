@@ -1,5 +1,7 @@
 import 'package:coloring_app/app_colors.dart';
 import 'package:coloring_app/const_data.dart';
+import 'package:coloring_app/models/app_color.dart';
+import 'package:coloring_app/models/paint_object.dart';
 import 'package:flutter/material.dart';
 
 class ItemPickerWidget extends StatefulWidget {
@@ -7,24 +9,13 @@ class ItemPickerWidget extends StatefulWidget {
     Key? key,
     required this.onColorChange,
   }) : super(key: key);
-  final Function(AppColors color) onColorChange;
+  final Function(CustomColor color) onColorChange;
   @override
   State<ItemPickerWidget> createState() => _ItemPickerWidgetState();
 }
 
 class _ItemPickerWidgetState extends State<ItemPickerWidget> {
-  final List<AppColors> colorList = [
-    AppColors.black,
-    AppColors.white,
-    AppColors.green,
-    AppColors.red,
-    AppColors.yellow,
-    AppColors.amber,
-    AppColors.cyan,
-    AppColors.orange,
-    AppColors.purple,
-    AppColors.gradient,
-  ];
+  final List<CustomColor> colorList = getAllColors();
   int pickedColorIndex = 0;
 
   @override
@@ -64,7 +55,7 @@ class _PickerItem extends StatelessWidget {
     required this.picked,
     required this.onTap,
   }) : super(key: key);
-  final AppColors color;
+  final CustomColor color;
   final bool picked;
   final VoidCallback onTap;
   @override
@@ -79,11 +70,19 @@ class _PickerItem extends StatelessWidget {
           curve: Curves.bounceOut,
           width: picked ? 100 : 80,
           height: 40,
-          decoration: BoxDecoration(
-              color: color.color,
-              gradient: color == AppColors.gradient
-                  ? const LinearGradient(colors: AppConstData.gradients)
-                  : null),
+          decoration: color.map(
+            oneColor: (oneColor) => BoxDecoration(
+              color: oneColor.color,
+            ),
+            gradient: (gradient) => BoxDecoration(
+              gradient: LinearGradient(colors: gradient.colors),
+            ),
+            pattern: (pattern) => BoxDecoration(
+              image: DecorationImage(
+                image: Image.asset(pattern.asset).image,
+              ),
+            ),
+          ),
         ),
       ),
     );

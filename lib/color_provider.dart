@@ -1,4 +1,5 @@
 import 'package:coloring_app/app_colors.dart';
+import 'package:coloring_app/models/app_color.dart';
 import 'package:flutter/material.dart';
 
 class ColorInherit extends InheritedWidget {
@@ -9,7 +10,7 @@ class ColorInherit extends InheritedWidget {
     required this.isFill,
     required this.size,
   }) : super(key: key, child: child);
-  final AppColors color;
+  final CustomColor color;
   final bool isFill;
   final int size;
   @override

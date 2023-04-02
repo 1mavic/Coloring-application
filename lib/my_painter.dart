@@ -3,19 +3,18 @@ import 'dart:ui' as ui;
 
 import 'package:coloring_app/app_colors.dart';
 import 'package:coloring_app/const_data.dart';
+import 'package:coloring_app/models/paint_object.dart';
 
-import 'package:coloring_app/main.dart';
 import 'package:flutter/rendering.dart';
 // import 'package:flutter/material.dart';
 
 class MyPainter extends CustomPainter {
   const MyPainter({
+    /// list of paint object to draw on canvas
     required this.objects,
-    required this.history,
   });
 
-  final List<PaintObjects> objects;
-  final bool history;
+  final List<PaintObject> objects;
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Rect.fromCenter(
@@ -24,52 +23,91 @@ class MyPainter extends CustomPainter {
       height: size.height,
     );
     final paint = Paint()..strokeCap = StrokeCap.round;
-    Path path = Path();
-    for (var element in objects) {
-      if (element is Dot) {
-        path.moveTo(element.point.dx, element.point.dy);
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawPoints(
+    final path = Path();
+    for (final element in objects) {
+      element.map(
+        dot: (dot) {
+          path.moveTo(dot.point.dx, dot.point.dy);
+          dot.color?.map(
+            oneColor: (oneColor) {
+              paint
+                ..color = oneColor.color
+                ..shader = null;
+            },
+            gradient: (gradient) {
+              paint.shader = const LinearGradient(
+                colors: AppConstData.gradients,
+              ).createShader(rect);
+            },
+            pattern: (pattern) {
+              paint.shader = ImageShader(
+                pattern.image,
+                TileMode.mirror,
+                TileMode.mirror,
+                Matrix4.identity().storage,
+              );
+            },
+          );
+          canvas.drawPoints(
             ui.PointMode.points,
-            [element.point],
-            paint
-              ..strokeWidth = element.size.toDouble()
-              ..shader = element.color == AppColors.gradient
-                  ? const LinearGradient(
-                      colors: AppConstData.gradients,
-                    ).createShader(rect)
-                  : null);
-      } else if (element is Line) {
-        path.moveTo(element.start.dx, element.start.dy);
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawLine(
-            element.start,
-            element.end,
-            paint
-              ..shader = element.color == AppColors.gradient
-                  ? const LinearGradient(
-                      colors: AppConstData.gradients,
-                    ).createShader(rect)
-                  : null
-              ..strokeWidth = element.size.toDouble());
-      } else if (element is FillColor) {
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawPaint(paint
-          ..shader = element.color == AppColors.gradient
-              ? const LinearGradient(
-                  colors: AppConstData.gradients,
-                ).createShader(rect)
-              : null);
-      }
+            [dot.point],
+            paint..strokeWidth = dot.size.toDouble(),
+          );
+        },
+        line: (line) {
+          path.moveTo(line.start.dx, line.start.dy);
+          line.color?.map(
+            oneColor: (oneColor) {
+              paint
+                ..color = oneColor.color
+                ..shader = null;
+            },
+            gradient: (gradient) {
+              paint.shader = const LinearGradient(
+                colors: AppConstData.gradients,
+              ).createShader(rect);
+            },
+            pattern: (pattern) {
+              paint.shader = ImageShader(
+                pattern.image,
+                TileMode.mirror,
+                TileMode.mirror,
+                Matrix4.identity().storage,
+              );
+            },
+          );
+          canvas.drawLine(
+            line.start,
+            line.end,
+            paint..strokeWidth = line.size.toDouble(),
+          );
+        },
+        fill: (fill) {
+          fill.color?.map(
+            oneColor: (oneColor) {
+              paint
+                ..color = oneColor.color
+                ..shader = null;
+            },
+            gradient: (gradient) {
+              paint.shader = const LinearGradient(
+                colors: AppConstData.gradients,
+              ).createShader(rect);
+            },
+            pattern: (pattern) {
+              paint.shader = ImageShader(
+                pattern.image,
+                TileMode.mirror,
+                TileMode.mirror,
+                Matrix4.identity().storage,
+              );
+            },
+          );
+          canvas.drawPaint(
+            paint,
+          );
+        },
+      );
     }
     // canvas.restore();
   }
@@ -90,81 +128,4 @@ Path scalePath(Path path, double scaleFactor) {
   // ..translate(-center.dx, -center.dy);
   final scaledPath = path.transform(matrix.storage);
   return scaledPath;
-}
-
-class MyImagePainter extends CustomPainter {
-  const MyImagePainter({
-    required this.objects,
-    required this.history,
-    required this.image,
-  });
-
-  final List<PaintObjects> objects;
-  final bool history;
-  final ui.Image image;
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromCenter(
-      center: Offset(size.width / 2, size.height / 2),
-      width: size.width,
-      height: size.height,
-    );
-    final paint = Paint()..strokeCap = StrokeCap.round;
-    Path path = Path();
-    log("${history} total: " + objects.length.toString());
-    for (var element in objects) {
-      if (element is Dot) {
-        path.moveTo(element.point.dx, element.point.dy);
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawPoints(
-            ui.PointMode.points,
-            [element.point],
-            paint
-              ..strokeWidth = element.size.toDouble()
-              ..shader = element.color == AppColors.gradient
-                  ? const LinearGradient(
-                      colors: AppConstData.gradients,
-                    ).createShader(rect)
-                  : null);
-      } else if (element is Line) {
-        path.moveTo(element.start.dx, element.start.dy);
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawLine(
-            element.start,
-            element.end,
-            paint
-              ..shader = ImageShader(
-                image,
-                TileMode.mirror,
-                TileMode.mirror,
-                Matrix4.identity().storage,
-              )
-              ..strokeWidth = element.size.toDouble());
-      } else if (element is FillColor) {
-        final color = element.color.color;
-        if (color != null) {
-          paint.color = color;
-        }
-        canvas.drawPaint(paint
-          ..shader = element.color == AppColors.gradient
-              ? const LinearGradient(
-                  colors: AppConstData.gradients,
-                ).createShader(rect)
-              : null);
-      }
-    }
-    // canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(MyImagePainter oldDelegate) => true;
-
-  @override
-  bool shouldRebuildSemantics(MyImagePainter oldDelegate) => false;
 }
