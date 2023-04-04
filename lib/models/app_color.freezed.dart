@@ -21,6 +21,7 @@ mixin _$CustomColor {
     required TResult Function(ui.Color color) oneColor,
     required TResult Function(List<Color> colors) gradient,
     required TResult Function(ui.Image image, String asset) pattern,
+    required TResult Function() erase,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$CustomColor {
     TResult? Function(ui.Color color)? oneColor,
     TResult? Function(List<Color> colors)? gradient,
     TResult? Function(ui.Image image, String asset)? pattern,
+    TResult? Function()? erase,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$CustomColor {
     TResult Function(ui.Color color)? oneColor,
     TResult Function(List<Color> colors)? gradient,
     TResult Function(ui.Image image, String asset)? pattern,
+    TResult Function()? erase,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$CustomColor {
     required TResult Function(_OneColor value) oneColor,
     required TResult Function(_GradientColor value) gradient,
     required TResult Function(_Pattern value) pattern,
+    required TResult Function(_EraseColor value) erase,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$CustomColor {
     TResult? Function(_OneColor value)? oneColor,
     TResult? Function(_GradientColor value)? gradient,
     TResult? Function(_Pattern value)? pattern,
+    TResult? Function(_EraseColor value)? erase,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$CustomColor {
     TResult Function(_OneColor value)? oneColor,
     TResult Function(_GradientColor value)? gradient,
     TResult Function(_Pattern value)? pattern,
+    TResult Function(_EraseColor value)? erase,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -116,6 +122,7 @@ class __$$_OneColorCopyWithImpl<$Res>
 class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
   const _$_OneColor({required this.color}) : super._();
 
+  /// color property
   @override
   final ui.Color color;
 
@@ -155,6 +162,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     required TResult Function(ui.Color color) oneColor,
     required TResult Function(List<Color> colors) gradient,
     required TResult Function(ui.Image image, String asset) pattern,
+    required TResult Function() erase,
   }) {
     return oneColor(color);
   }
@@ -165,6 +173,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     TResult? Function(ui.Color color)? oneColor,
     TResult? Function(List<Color> colors)? gradient,
     TResult? Function(ui.Image image, String asset)? pattern,
+    TResult? Function()? erase,
   }) {
     return oneColor?.call(color);
   }
@@ -175,6 +184,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     TResult Function(ui.Color color)? oneColor,
     TResult Function(List<Color> colors)? gradient,
     TResult Function(ui.Image image, String asset)? pattern,
+    TResult Function()? erase,
     required TResult orElse(),
   }) {
     if (oneColor != null) {
@@ -189,6 +199,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     required TResult Function(_OneColor value) oneColor,
     required TResult Function(_GradientColor value) gradient,
     required TResult Function(_Pattern value) pattern,
+    required TResult Function(_EraseColor value) erase,
   }) {
     return oneColor(this);
   }
@@ -199,6 +210,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     TResult? Function(_OneColor value)? oneColor,
     TResult? Function(_GradientColor value)? gradient,
     TResult? Function(_Pattern value)? pattern,
+    TResult? Function(_EraseColor value)? erase,
   }) {
     return oneColor?.call(this);
   }
@@ -209,6 +221,7 @@ class _$_OneColor extends _OneColor with DiagnosticableTreeMixin {
     TResult Function(_OneColor value)? oneColor,
     TResult Function(_GradientColor value)? gradient,
     TResult Function(_Pattern value)? pattern,
+    TResult Function(_EraseColor value)? erase,
     required TResult orElse(),
   }) {
     if (oneColor != null) {
@@ -222,6 +235,7 @@ abstract class _OneColor extends CustomColor {
   const factory _OneColor({required final ui.Color color}) = _$_OneColor;
   const _OneColor._() : super._();
 
+  /// color property
   ui.Color get color;
   @JsonKey(ignore: true)
   _$$_OneColorCopyWith<_$_OneColor> get copyWith =>
@@ -266,7 +280,10 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
       : _colors = colors,
         super._();
 
+  /// list of colors for gradient
   final List<Color> _colors;
+
+  /// list of colors for gradient
   @override
   List<Color> get colors {
     if (_colors is EqualUnmodifiableListView) return _colors;
@@ -311,6 +328,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     required TResult Function(ui.Color color) oneColor,
     required TResult Function(List<Color> colors) gradient,
     required TResult Function(ui.Image image, String asset) pattern,
+    required TResult Function() erase,
   }) {
     return gradient(colors);
   }
@@ -321,6 +339,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     TResult? Function(ui.Color color)? oneColor,
     TResult? Function(List<Color> colors)? gradient,
     TResult? Function(ui.Image image, String asset)? pattern,
+    TResult? Function()? erase,
   }) {
     return gradient?.call(colors);
   }
@@ -331,6 +350,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     TResult Function(ui.Color color)? oneColor,
     TResult Function(List<Color> colors)? gradient,
     TResult Function(ui.Image image, String asset)? pattern,
+    TResult Function()? erase,
     required TResult orElse(),
   }) {
     if (gradient != null) {
@@ -345,6 +365,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     required TResult Function(_OneColor value) oneColor,
     required TResult Function(_GradientColor value) gradient,
     required TResult Function(_Pattern value) pattern,
+    required TResult Function(_EraseColor value) erase,
   }) {
     return gradient(this);
   }
@@ -355,6 +376,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     TResult? Function(_OneColor value)? oneColor,
     TResult? Function(_GradientColor value)? gradient,
     TResult? Function(_Pattern value)? pattern,
+    TResult? Function(_EraseColor value)? erase,
   }) {
     return gradient?.call(this);
   }
@@ -365,6 +387,7 @@ class _$_GradientColor extends _GradientColor with DiagnosticableTreeMixin {
     TResult Function(_OneColor value)? oneColor,
     TResult Function(_GradientColor value)? gradient,
     TResult Function(_Pattern value)? pattern,
+    TResult Function(_EraseColor value)? erase,
     required TResult orElse(),
   }) {
     if (gradient != null) {
@@ -379,6 +402,7 @@ abstract class _GradientColor extends CustomColor {
       _$_GradientColor;
   const _GradientColor._() : super._();
 
+  /// list of colors for gradient
   List<Color> get colors;
   @JsonKey(ignore: true)
   _$$_GradientColorCopyWith<_$_GradientColor> get copyWith =>
@@ -425,8 +449,11 @@ class __$$_PatternCopyWithImpl<$Res>
 class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
   const _$_Pattern({required this.image, required this.asset}) : super._();
 
+  /// image converted to uiImage
   @override
   final ui.Image image;
+
+  /// assets link
   @override
   final String asset;
 
@@ -468,6 +495,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     required TResult Function(ui.Color color) oneColor,
     required TResult Function(List<Color> colors) gradient,
     required TResult Function(ui.Image image, String asset) pattern,
+    required TResult Function() erase,
   }) {
     return pattern(image, asset);
   }
@@ -478,6 +506,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     TResult? Function(ui.Color color)? oneColor,
     TResult? Function(List<Color> colors)? gradient,
     TResult? Function(ui.Image image, String asset)? pattern,
+    TResult? Function()? erase,
   }) {
     return pattern?.call(image, asset);
   }
@@ -488,6 +517,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     TResult Function(ui.Color color)? oneColor,
     TResult Function(List<Color> colors)? gradient,
     TResult Function(ui.Image image, String asset)? pattern,
+    TResult Function()? erase,
     required TResult orElse(),
   }) {
     if (pattern != null) {
@@ -502,6 +532,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     required TResult Function(_OneColor value) oneColor,
     required TResult Function(_GradientColor value) gradient,
     required TResult Function(_Pattern value) pattern,
+    required TResult Function(_EraseColor value) erase,
   }) {
     return pattern(this);
   }
@@ -512,6 +543,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     TResult? Function(_OneColor value)? oneColor,
     TResult? Function(_GradientColor value)? gradient,
     TResult? Function(_Pattern value)? pattern,
+    TResult? Function(_EraseColor value)? erase,
   }) {
     return pattern?.call(this);
   }
@@ -522,6 +554,7 @@ class _$_Pattern extends _Pattern with DiagnosticableTreeMixin {
     TResult Function(_OneColor value)? oneColor,
     TResult Function(_GradientColor value)? gradient,
     TResult Function(_Pattern value)? pattern,
+    TResult Function(_EraseColor value)? erase,
     required TResult orElse(),
   }) {
     if (pattern != null) {
@@ -537,9 +570,133 @@ abstract class _Pattern extends CustomColor {
       required final String asset}) = _$_Pattern;
   const _Pattern._() : super._();
 
+  /// image converted to uiImage
   ui.Image get image;
+
+  /// assets link
   String get asset;
   @JsonKey(ignore: true)
   _$$_PatternCopyWith<_$_Pattern> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_EraseColorCopyWith<$Res> {
+  factory _$$_EraseColorCopyWith(
+          _$_EraseColor value, $Res Function(_$_EraseColor) then) =
+      __$$_EraseColorCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_EraseColorCopyWithImpl<$Res>
+    extends _$CustomColorCopyWithImpl<$Res, _$_EraseColor>
+    implements _$$_EraseColorCopyWith<$Res> {
+  __$$_EraseColorCopyWithImpl(
+      _$_EraseColor _value, $Res Function(_$_EraseColor) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_EraseColor extends _EraseColor with DiagnosticableTreeMixin {
+  const _$_EraseColor() : super._();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'CustomColor.erase()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'CustomColor.erase'));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_EraseColor);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(ui.Color color) oneColor,
+    required TResult Function(List<Color> colors) gradient,
+    required TResult Function(ui.Image image, String asset) pattern,
+    required TResult Function() erase,
+  }) {
+    return erase();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(ui.Color color)? oneColor,
+    TResult? Function(List<Color> colors)? gradient,
+    TResult? Function(ui.Image image, String asset)? pattern,
+    TResult? Function()? erase,
+  }) {
+    return erase?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(ui.Color color)? oneColor,
+    TResult Function(List<Color> colors)? gradient,
+    TResult Function(ui.Image image, String asset)? pattern,
+    TResult Function()? erase,
+    required TResult orElse(),
+  }) {
+    if (erase != null) {
+      return erase();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_OneColor value) oneColor,
+    required TResult Function(_GradientColor value) gradient,
+    required TResult Function(_Pattern value) pattern,
+    required TResult Function(_EraseColor value) erase,
+  }) {
+    return erase(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_OneColor value)? oneColor,
+    TResult? Function(_GradientColor value)? gradient,
+    TResult? Function(_Pattern value)? pattern,
+    TResult? Function(_EraseColor value)? erase,
+  }) {
+    return erase?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_OneColor value)? oneColor,
+    TResult Function(_GradientColor value)? gradient,
+    TResult Function(_Pattern value)? pattern,
+    TResult Function(_EraseColor value)? erase,
+    required TResult orElse(),
+  }) {
+    if (erase != null) {
+      return erase(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _EraseColor extends CustomColor {
+  const factory _EraseColor() = _$_EraseColor;
+  const _EraseColor._() : super._();
 }

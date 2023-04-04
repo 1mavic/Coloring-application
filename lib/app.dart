@@ -1,35 +1,28 @@
-import 'dart:async';
-import 'dart:developer';
-
+import 'package:coloring_app/config/flavors/flavor_banner.dart';
+import 'package:coloring_app/config/flavors/flavors.dart';
 import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/screens/coloring_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 // TODO(macegora): math painted lines with template, to check on correct?
-
-void main() {
-  unawaited(
-    runZonedGuarded(
-      () async {
-        WidgetsFlutterBinding.ensureInitialized();
-        runApp(const MyApp());
-      },
-      (Object error, StackTrace stack) {
-        log(error.toString());
-      },
-    ),
-  );
-}
+// make cancel button to erase prev paint
+// make clear button to clear all paintings
 
 /// my app widget
 class MyApp extends StatelessWidget {
   /// my app widget
-  const MyApp({super.key});
+  const MyApp({
+    required this.flavor,
+    super.key,
+  });
 
+  /// application flavor
+  final AppFlavor flavor;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      showPerformanceOverlay: true,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -42,7 +35,10 @@ class MyApp extends StatelessWidget {
         //
         primarySwatch: Colors.blue,
       ),
-      home: const ColoringScreen(),
+      home: FlavorBanner(
+        flavor: flavor,
+        child: const ColoringScreen(),
+      ),
     );
   }
 }

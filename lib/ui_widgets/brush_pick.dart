@@ -1,118 +1,72 @@
+import 'package:coloring_app/const_data.dart';
+import 'package:coloring_app/models/app_color.dart';
+import 'package:coloring_app/models/brush_type.dart';
+import 'package:coloring_app/providers/brush_providers.dart';
+import 'package:coloring_app/providers/color_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// widget with brush options
-class BrushPickWidget extends StatefulWidget {
+class BrushPickWidget extends ConsumerWidget {
   /// widget with brush options
   const BrushPickWidget({
-    required this.onBrushPick,
-    required this.onPaintFillPick,
-    required this.onErasePick,
-    required this.onSizePick,
     super.key,
   });
 
-  /// user picked brush
-  final VoidCallback onBrushPick;
-
-  /// user picked fill
-  final VoidCallback onPaintFillPick;
-
-  /// user picked eraser
-  final VoidCallback onErasePick;
-
-  /// user changed point size callback
-  final void Function(int) onSizePick;
   @override
-  State<BrushPickWidget> createState() => _BrushPickWidgetState();
-}
-
-class _BrushPickWidgetState extends State<BrushPickWidget> {
-  int picked = 0;
-  int pickedSize = 0;
-
-  final List<int> _sizeList = [4, 8, 12, 16];
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pickedBrushSize = ref.watch(brushSizeProvider);
+    final pickedBrushType = ref.watch(brushProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {
-            if (picked == 0) return;
-            setState(() {
-              picked = 0;
-            });
-            widget.onBrushPick();
-          },
-          child: Container(
-            color: Colors.blue,
-            padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.bounceOut,
-              width: picked == 0 ? 100 : 80,
-              height: 40,
-              child: const Icon(
-                Icons.brush,
-                color: Colors.white,
-                size: 40,
+        SizedBox(
+          width: 150,
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) => Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                onTap: () {
+                  ref
+                      .read(brushProvider.notifier)
+                      .changeBrush(AppConstData.brushType[index]);
+                  if (AppConstData.brushType[index] != BrushType.eraser) {
+                    ref.read(pickedColorProvider.notifier).changeColor(
+                          ref.read(prevColorProvider),
+                        );
+                  } else {
+                    ref.read(pickedColorProvider.notifier).changeColor(
+                          const CustomColor.erase(),
+                        );
+                  }
+                },
+                child: Container(
+                  color: Colors.blue,
+                  padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.bounceOut,
+                    width: AppConstData.brushType[index] == pickedBrushType
+                        ? 100
+                        : 80,
+                    height: 40,
+                    child: Icon(
+                      AppConstData.brushType[index].icon,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        GestureDetector(
-          onTap: () {
-            if (picked == 1) return;
-            setState(() {
-              picked = 1;
-            });
-            widget.onPaintFillPick();
-          },
-          child: Container(
-            color: Colors.blue,
-            padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.bounceOut,
-              width: picked == 1 ? 100 : 80,
-              height: 40,
-              child: const Icon(
-                Icons.format_paint_rounded,
-                color: Colors.white,
-                size: 40,
-              ),
+            separatorBuilder: (_, __) => const SizedBox(
+              height: 10,
             ),
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        GestureDetector(
-          onTap: () {
-            if (picked == 2) return;
-            setState(() {
-              picked = 2;
-            });
-            widget.onErasePick();
-          },
-          child: Container(
-            color: Colors.blue,
-            padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.bounceOut,
-              width: picked == 2 ? 100 : 80,
-              height: 40,
-              child: const Icon(
-                Icons.layers_clear_outlined,
-                color: Colors.white,
-                size: 40,
-              ),
-            ),
+            itemCount: AppConstData.brushType.length,
           ),
         ),
         const SizedBox(
@@ -128,11 +82,9 @@ class _BrushPickWidgetState extends State<BrushPickWidget> {
               alignment: Alignment.centerLeft,
               child: GestureDetector(
                 onTap: () {
-                  if (pickedSize == index) return;
-                  setState(() {
-                    pickedSize = index;
-                  });
-                  widget.onSizePick(_sizeList[pickedSize]);
+                  ref.read(brushSizeProvider.notifier).changeBrushSize(
+                        AppConstData.sizeList[index],
+                      );
                 },
                 child: Container(
                   color: Colors.blue,
@@ -140,7 +92,9 @@ class _BrushPickWidgetState extends State<BrushPickWidget> {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 600),
                     curve: Curves.bounceOut,
-                    width: pickedSize == index ? 100 : 80,
+                    width: AppConstData.sizeList[index] == pickedBrushSize
+                        ? 100
+                        : 80,
                     height: 40,
                     child: Center(
                       child: Container(
@@ -159,7 +113,7 @@ class _BrushPickWidgetState extends State<BrushPickWidget> {
             separatorBuilder: (_, __) => const SizedBox(
               height: 10,
             ),
-            itemCount: _sizeList.length,
+            itemCount: AppConstData.sizeList.length,
           ),
         ),
       ],

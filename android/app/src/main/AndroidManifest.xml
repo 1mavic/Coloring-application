@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.coloring_app">
+    package="com.coloring_app">
    <application
         android:label="coloring_app"
-        android:name="${applicationName}"
+        android:name="@string/app_name"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

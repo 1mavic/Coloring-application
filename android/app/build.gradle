@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.coloring_app"
+        applicationId "com.coloring_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
@@ -52,6 +52,26 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+    flavorDimensions "flavors"
+        productFlavors {
+            dev {
+                dimension "flavors"
+                resValue "string", "app_name", "[Dev]Coloring app"
+                versionNameSuffix "-dev"
+                applicationId "com.coloring_app.dev"
+            }
+            stage {
+                dimension "flavors"
+                resValue "string", "app_name", "[Stage]Coloring app"
+                versionNameSuffix "-stage"
+                applicationId "com.coloring_app.stage"
+            }
+            prod {
+                dimension "flavors"
+                resValue "string", "app_name", "Coloring app"
+            }
+        }
+    
 
     buildTypes {
         release {

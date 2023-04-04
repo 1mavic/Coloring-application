@@ -1,18 +1,21 @@
 import 'dart:async';
 
+import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/models/paint_object.dart';
 import 'package:coloring_app/models/picture_part.dart';
-import 'package:coloring_app/screens/color_provider.dart';
+import 'package:coloring_app/providers/brush_providers.dart';
+import 'package:coloring_app/providers/color_providers.dart';
 import 'package:coloring_app/ui_widgets/my_clipper.dart';
 import 'package:coloring_app/ui_widgets/my_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 /// pickture object widget
 /// represents individaual layer for every part of image
 /// that are painted separatly
-class PictureObject extends StatefulWidget {
+class PictureObject extends ConsumerStatefulWidget {
   /// pickture object widget
   /// represents individaual layer for every part of image
   /// that are painted separatly
@@ -24,10 +27,10 @@ class PictureObject extends StatefulWidget {
   /// part for display
   final PicturePart part;
   @override
-  State<PictureObject> createState() => _PictureObjectState();
+  ConsumerState<PictureObject> createState() => _PictureObjectState();
 }
 
-class _PictureObjectState extends State<PictureObject> {
+class _PictureObjectState extends ConsumerState<PictureObject> {
   final List<PaintObject> objects = [];
   final List<PaintObject> history = [];
   late StreamController<List<PaintObject>> historyStream;
@@ -65,7 +68,6 @@ class _PictureObjectState extends State<PictureObject> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = ColorInherit.of(context);
     return Positioned(
       left: widget.part.coordinates.dx,
       top: widget.part.coordinates.dy,
@@ -105,29 +107,38 @@ class _PictureObjectState extends State<PictureObject> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onPanDown: (details) {
-                      if (provider?.isFill ?? false) {
+                      final color = ref.read(pickedColorProvider);
+                      final size = ref.read(brushSizeProvider);
+                      final brush = ref.read(brushProvider);
+                      if (brush == BrushType.filling) {
                         objects.add(
-                          PaintObject.fill(color: provider?.color),
+                          PaintObject.fill(color: color),
                         );
                         objectStream.add(objects);
                       } else {
                         objects.add(
                           PaintObject.dot(
                             point: details.localPosition,
-                            color: provider?.color,
-                            size: provider?.size ?? 10,
+                            color: color,
+                            size: size,
                           ),
                         );
                         objectStream.add(objects);
                       }
                     },
                     onPanUpdate: (details) {
+                      final color = ref.read(pickedColorProvider);
+                      final size = ref.read(brushSizeProvider);
+                      final brush = ref.read(brushProvider);
+                      if (brush == BrushType.filling) {
+                        return;
+                      }
                       objects.add(
                         PaintObject.line(
                           start: objects.last.lastDot,
                           end: details.localPosition,
-                          color: provider?.color,
-                          size: provider?.size ?? 10,
+                          color: color,
+                          size: size,
                         ),
                       );
                       objectStream.add(objects);
