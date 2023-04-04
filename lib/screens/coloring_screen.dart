@@ -24,6 +24,7 @@ class ColoringScreen extends StatefulWidget {
 class _ColoringScreenState extends State<ColoringScreen> {
   CustomColor _currentColor = getAllColors().first;
   final List<CustomColor> patternColors = [];
+  CustomColor? _prevColor;
   bool _isFill = false;
   int _size = 10;
 
@@ -110,6 +111,7 @@ class _ColoringScreenState extends State<ColoringScreen> {
                   onColorChange: (color) => setState(
                     () {
                       _currentColor = color;
+                      _prevColor = _currentColor;
                     },
                   ),
                 ),
@@ -127,18 +129,22 @@ class _ColoringScreenState extends State<ColoringScreen> {
                   onBrushPick: () {
                     setState(() {
                       _isFill = false;
+                      _currentColor = _prevColor ?? getAllColors().first;
                     });
                   },
                   onPaintFillPick: () {
                     setState(() {
                       _isFill = true;
+                      _currentColor = _prevColor ?? getAllColors().first;
                     });
                   },
                   onErasePick: () {
-                    // setState(() {
-                    //   _isFill = false;
-                    //   // _currentColor = AppColors.erase;
-                    // });
+                    _prevColor = _currentColor;
+                    setState(() {
+                      _isFill = false;
+                      _currentColor =
+                          const CustomColor.oneColor(color: Colors.white);
+                    });
                   },
                 ),
               ),
