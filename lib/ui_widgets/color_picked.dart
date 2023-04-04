@@ -1,43 +1,22 @@
 import 'package:coloring_app/models/app_color.dart';
+import 'package:coloring_app/models/brush_type.dart';
+import 'package:coloring_app/providers/brush_providers.dart';
+import 'package:coloring_app/providers/color_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// widget with all colors options for user
-class ColorPickerWidget extends StatefulWidget {
+class ColorPickerWidget extends ConsumerWidget {
   ///
   const ColorPickerWidget({
-    required this.onColorChange,
-    required this.patternColors,
     super.key,
   });
 
-  /// user picked new color callback
-  final void Function(CustomColor color) onColorChange;
-
-  /// list of image patterns for color panel
-  final List<CustomColor> patternColors;
   @override
-  State<ColorPickerWidget> createState() => _ColorPickerWidgetState();
-}
-
-class _ColorPickerWidgetState extends State<ColorPickerWidget> {
-  final List<CustomColor> colorList = [];
-  int pickedColorIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-    colorList.addAll([...getAllColors(), ...widget.patternColors]);
-  }
-
-  @override
-  void didUpdateWidget(covariant ColorPickerWidget oldWidget) {
-    colorList
-      ..clear()
-      ..addAll([...getAllColors(), ...widget.patternColors]);
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorList = ref.watch(availableColorsProvider);
+    final pickedColor = ref.watch(pickedColorProvider);
+    final pickedBrush = ref.watch(brushProvider);
     return SizedBox(
       width: 250,
       child: ListView.separated(
@@ -47,13 +26,17 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           alignment: Alignment.centerRight,
           child: _PickerItem(
             color: colorList[index],
-            picked: pickedColorIndex == index,
+            picked: pickedColor == colorList[index],
             onTap: () {
-              setState(() {
-                pickedColorIndex = index;
-              });
-
-              widget.onColorChange(colorList[pickedColorIndex]);
+              ref.read(pickedColorProvider.notifier).changeColor(
+                    colorList[index],
+                  );
+              ref.read(prevColorProvider.notifier).changePrevColor(
+                    colorList[index],
+                  );
+              if (pickedBrush == BrushType.eraser) {
+                ref.read(brushProvider.notifier).changeBrush(BrushType.brush);
+              }
             },
           ),
         ),
