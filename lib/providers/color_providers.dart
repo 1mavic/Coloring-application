@@ -76,10 +76,15 @@ class _PatternColorsNotifier extends StateNotifier<List<CustomColor>> {
 
     _generator(assets).listen(
       imageList.add,
+      // when stream finishes completes completer
       onDone: () => completer.complete(imageList),
+      onError: (_) {},
+      cancelOnError: false,
     );
 
     final result = await completer.future;
+    // after completer generates list of CustomColor.patterns object
+    // to show them in color pick menu
     final patterns = List.generate(
       result.length,
       (index) => CustomColor.pattern(
@@ -91,6 +96,9 @@ class _PatternColorsNotifier extends StateNotifier<List<CustomColor>> {
     state = patterns;
   }
 
+  // TODO(macegora): Isolate?
+  // async generator for proccessing images
+  // takes assets string and return ui.Images objects
   Stream<ui.Image> _generator(List<String> list) async* {
     for (final imageString in list) {
       final comp = Completer<ui.Image>();

@@ -42,7 +42,6 @@ dependencies:
   json_annotation: ^4.8.0
   json_serializable: ^6.6.1
   path_drawing: ^1.0.1
-  widget_mask: ^1.0.0+0
 
 dependency_overrides:
   intl: ^0.18.0
