@@ -31,6 +31,8 @@ class CustomColor with _$CustomColor {
     required String asset,
   }) = _Pattern;
 
+  const factory CustomColor.erase() = _EraseColor;
+
   const CustomColor._();
 
   // factory PaintObject.fromJson(Map<String, Object?> json) =>

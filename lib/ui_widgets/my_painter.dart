@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/models/paint_object.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter/rendering.dart';
 // import 'package:flutter/material.dart';
@@ -30,6 +31,11 @@ class MyPainter extends CustomPainter {
         dot: (dot) {
           path.moveTo(dot.point.dx, dot.point.dy);
           dot.color?.map(
+            erase: (eraseColor) {
+              paint
+                ..color = Colors.white
+                ..shader = null;
+            },
             oneColor: (oneColor) {
               paint
                 ..color = oneColor.color
@@ -58,6 +64,11 @@ class MyPainter extends CustomPainter {
         line: (line) {
           path.moveTo(line.start.dx, line.start.dy);
           line.color?.map(
+            erase: (eraseColor) {
+              paint
+                ..color = Colors.white
+                ..shader = null;
+            },
             oneColor: (oneColor) {
               paint
                 ..color = oneColor.color
@@ -85,6 +96,11 @@ class MyPainter extends CustomPainter {
         },
         fill: (fill) {
           fill.color?.map(
+            erase: (eraseColor) {
+              paint
+                ..color = Colors.white
+                ..shader = null;
+            },
             oneColor: (oneColor) {
               paint
                 ..color = oneColor.color

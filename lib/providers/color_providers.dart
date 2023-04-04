@@ -36,9 +36,12 @@ class _PrevColorNotifier extends StateNotifier<CustomColor> {
 
   // change stored color. if new color is white(erase type) state is not changed
   void changePrevColor(CustomColor newColor) {
-    if (newColor != const CustomColor.oneColor(color: Colors.white)) {
-      state = newColor;
-    }
+    newColor.maybeMap(
+      orElse: () {
+        state = newColor;
+      },
+      erase: (_) {},
+    );
   }
 }
 
@@ -46,7 +49,6 @@ class _PrevColorNotifier extends StateNotifier<CustomColor> {
 final colorsProvider = Provider<List<CustomColor>>((ref) {
   return [
     const CustomColor.oneColor(color: Colors.black),
-    // const CustomColor.oneColor(color: Colors.white),
     const CustomColor.oneColor(color: Colors.green),
     const CustomColor.oneColor(color: Colors.red),
     const CustomColor.oneColor(color: Colors.yellow),

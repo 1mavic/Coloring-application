@@ -173,8 +173,11 @@ class _$_PaintDot extends _PaintDot with DiagnosticableTreeMixin {
       this.color = const CustomColor.oneColor(color: Colors.black)})
       : super._();
 
+  /// dot position on canvas
   @override
   final Offset point;
+
+  /// dot size
   @override
   final int size;
   @override
@@ -295,7 +298,10 @@ abstract class _PaintDot extends PaintObject {
       final CustomColor? color}) = _$_PaintDot;
   const _PaintDot._() : super._();
 
+  /// dot position on canvas
   Offset get point;
+
+  /// dot size
   int get size;
   @override
   CustomColor? get color;
@@ -366,10 +372,15 @@ class _$_PaintLine extends _PaintLine with DiagnosticableTreeMixin {
       this.color = const CustomColor.oneColor(color: Colors.black)})
       : super._();
 
+  /// line stroke width
   @override
   final int size;
+
+  /// start point on canvas
   @override
   final Offset start;
+
+  /// end point on canvas
   @override
   final Offset end;
   @override
@@ -493,8 +504,13 @@ abstract class _PaintLine extends PaintObject {
       final CustomColor? color}) = _$_PaintLine;
   const _PaintLine._() : super._();
 
+  /// line stroke width
   int get size;
+
+  /// start point on canvas
   Offset get start;
+
+  /// end point on canvas
   Offset get end;
   @override
   CustomColor? get color;
@@ -547,6 +563,7 @@ class _$_PaintFill extends _PaintFill with DiagnosticableTreeMixin {
       {this.color = const CustomColor.oneColor(color: Colors.black)})
       : super._();
 
+  /// color property
   @override
   @JsonKey()
   final CustomColor? color;
@@ -659,6 +676,8 @@ abstract class _PaintFill extends PaintObject {
   const _PaintFill._() : super._();
 
   @override
+
+  /// color property
   CustomColor? get color;
   @override
   @JsonKey(ignore: true)

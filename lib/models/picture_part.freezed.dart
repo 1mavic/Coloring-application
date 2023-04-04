@@ -16,10 +16,19 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PicturePart {
+  /// part id
   int get id => throw _privateConstructorUsedError;
+
+  /// part asset link
   String get asset => throw _privateConstructorUsedError;
+
+  /// part icon path of icon border
   String get iconPath => throw _privateConstructorUsedError;
+
+  /// size of part
   Size get size => throw _privateConstructorUsedError;
+
+  /// coordinaets of this part on screen. top left
   Offset get coordinates => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -145,14 +154,23 @@ class _$_PicturePart implements _PicturePart {
       required this.size,
       required this.coordinates});
 
+  /// part id
   @override
   final int id;
+
+  /// part asset link
   @override
   final String asset;
+
+  /// part icon path of icon border
   @override
   final String iconPath;
+
+  /// size of part
   @override
   final Size size;
+
+  /// coordinaets of this part on screen. top left
   @override
   final Offset coordinates;
 
@@ -195,14 +213,24 @@ abstract class _PicturePart implements PicturePart {
       required final Offset coordinates}) = _$_PicturePart;
 
   @override
+
+  /// part id
   int get id;
   @override
+
+  /// part asset link
   String get asset;
   @override
+
+  /// part icon path of icon border
   String get iconPath;
   @override
+
+  /// size of part
   Size get size;
   @override
+
+  /// coordinaets of this part on screen. top left
   Offset get coordinates;
   @override
   @JsonKey(ignore: true)

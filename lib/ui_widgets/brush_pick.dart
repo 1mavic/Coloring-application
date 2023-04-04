@@ -40,7 +40,7 @@ class BrushPickWidget extends ConsumerWidget {
                         );
                   } else {
                     ref.read(pickedColorProvider.notifier).changeColor(
-                          const CustomColor.oneColor(color: Colors.white),
+                          const CustomColor.erase(),
                         );
                   }
                 },

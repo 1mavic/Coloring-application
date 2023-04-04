@@ -71,6 +71,7 @@ class _PickerItem extends StatelessWidget {
           width: picked ? 100 : 80,
           height: 40,
           decoration: color.map(
+            erase: (_) => null,
             oneColor: (oneColor) => BoxDecoration(
               color: oneColor.color,
             ),
