@@ -1,4 +1,4 @@
-package com.example.coloring_app
+package com.coloring_app
 
 import io.flutter.embedding.android.FlutterActivity
 

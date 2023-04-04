@@ -1,0 +1,17 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "name": "coloring_app",
+            "program": "lib/main_dev.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--target",
+                "lib/main_dev.dart",
+                "--flavor",
+                "dev",
+            ]
+        }
+    ]
+}

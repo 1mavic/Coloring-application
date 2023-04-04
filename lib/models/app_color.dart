@@ -31,6 +31,7 @@ class CustomColor with _$CustomColor {
     required String asset,
   }) = _Pattern;
 
+  /// erase color (white)
   const factory CustomColor.erase() = _EraseColor;
 
   const CustomColor._();

@@ -4,7 +4,6 @@ import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/models/paint_object.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/rendering.dart';
 // import 'package:flutter/material.dart';
 
 /// custom canvas painter for painting user input
