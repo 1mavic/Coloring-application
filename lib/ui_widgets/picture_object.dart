@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/models/paint_object.dart';
@@ -159,13 +160,16 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                           AsyncSnapshot<List<PaintObject>> snapshot,
                         ) {
                           if (snapshot.hasData) {
+                            log('current build ${widget.part.id}');
                             final data = snapshot.data;
                             if (data != null) {
-                              return CustomPaint(
-                                painter: MyPainter(
-                                  objects: data,
+                              return RepaintBoundary(
+                                child: CustomPaint(
+                                  painter: MyPainter(
+                                    objects: data,
+                                  ),
+                                  child: const SizedBox.expand(),
                                 ),
-                                child: const SizedBox.expand(),
                               );
                             } else {
                               return const SizedBox.expand();
