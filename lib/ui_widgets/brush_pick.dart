@@ -17,13 +17,13 @@ class BrushPickWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pickedBrushSize = ref.watch(brushSizeProvider);
     final pickedBrushType = ref.watch(brushProvider);
-    final width = MediaQuery.of(context).size.width;
+    final prevColor = ref.watch(prevColorProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: width / 5,
+          width: 150,
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -52,13 +52,13 @@ class BrushPickWidget extends ConsumerWidget {
                     duration: const Duration(milliseconds: 600),
                     curve: Curves.bounceOut,
                     width: AppConstData.brushType[index] == pickedBrushType
-                        ? width / 5
-                        : width / 6,
-                    height: width / 6,
+                        ? 100
+                        : 80,
+                    height: 40,
                     child: Icon(
                       AppConstData.brushType[index].icon,
                       color: Colors.white,
-                      size: width / 6,
+                      size: 40,
                     ),
                   ),
                 ),
@@ -74,7 +74,7 @@ class BrushPickWidget extends ConsumerWidget {
           height: 30,
         ),
         SizedBox(
-          width: width / 5,
+          width: 150,
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -94,9 +94,9 @@ class BrushPickWidget extends ConsumerWidget {
                     duration: const Duration(milliseconds: 600),
                     curve: Curves.bounceOut,
                     width: AppConstData.sizeList[index] == pickedBrushSize
-                        ? width / 5
-                        : width / 6,
-                    height: width / 6,
+                        ? 100
+                        : 80,
+                    height: 40,
                     child: Center(
                       child: Container(
                         width: 10 + (10 * index).toDouble(),

@@ -4,6 +4,7 @@ import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/models/coloring_picture.dart';
 import 'package:coloring_app/models/picture_part.dart';
+import 'package:coloring_app/providers/aspect_provider.dart';
 import 'package:coloring_app/providers/color_providers.dart';
 import 'package:coloring_app/ui_widgets/brush_pick.dart';
 import 'package:coloring_app/ui_widgets/color_picked.dart';
@@ -32,11 +33,25 @@ class _ColoringScreenState extends ConsumerState<ColoringScreen> {
     ref
         .read(patternColorsProvider.notifier)
         .loadPatterns(AppConstData.patternsImages);
+    // WidgetsBinding.instance.addPostFrameCallback((_) => checkRatio());
+  }
+
+  void checkRatio() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    ref.read(aspectProvider.notifier).changeAspect(
+          screenWidth / widget.picture.pictureSize.width,
+        );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final prevColor = ref.watch(prevColorProvider);
+    final width = MediaQuery.of(context).size.width;
+    final ratio = width / widget.picture.pictureSize.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).testColoringPage),
@@ -45,23 +60,19 @@ class _ColoringScreenState extends ConsumerState<ColoringScreen> {
         fit: StackFit.expand,
         children: [
           Center(
-            child: ColoredBox(
-              color: Colors.amber,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: AspectRatio(
-                  aspectRatio: widget.picture.aspectRatio,
-
-                  // width: widget.picture.pictureSize.width,
-                  child: Stack(
-                    children: [
-                      ...widget.picture.parts.map(
-                        (e) => PictureObject(
-                          part: e,
-                        ),
+            child: SizedBox(
+              width: width,
+              child: AspectRatio(
+                aspectRatio: widget.picture.aspectRatio,
+                child: Stack(
+                  children: [
+                    ...widget.picture.parts.map(
+                      (e) => PictureObject(
+                        part: e,
+                        ratio: ratio,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

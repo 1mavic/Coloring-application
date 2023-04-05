@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/models/paint_object.dart';
 import 'package:coloring_app/models/picture_part.dart';
+import 'package:coloring_app/providers/aspect_provider.dart';
 import 'package:coloring_app/providers/brush_providers.dart';
 import 'package:coloring_app/providers/color_providers.dart';
 import 'package:coloring_app/ui_widgets/my_clipper.dart';
@@ -22,11 +23,14 @@ class PictureObject extends ConsumerStatefulWidget {
   /// that are painted separatly
   const PictureObject({
     required this.part,
+    required this.ratio,
     super.key,
   });
 
   /// part for display
   final PicturePart part;
+
+  final double ratio;
   @override
   ConsumerState<PictureObject> createState() => _PictureObjectState();
 }
@@ -70,15 +74,16 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: widget.part.coordinates.dx,
-      top: widget.part.coordinates.dy,
+      left: widget.part.coordinates.dx * widget.ratio,
+      top: widget.part.coordinates.dy * widget.ratio,
       child: ClipPath(
-        clipper: MyCustomClipper(_path),
+        clipper: MyCustomClipper(widget.part.size.width, _path, widget.ratio),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            SizedBox.fromSize(
-              size: widget.part.size,
+            SizedBox(
+              width: widget.part.size.width * widget.ratio,
+              height: widget.part.size.height * widget.ratio,
               child: Stack(
                 children: [
                   StreamBuilder<List<PaintObject>>(
@@ -151,8 +156,8 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                       historyStream.add(history);
                     },
                     child: SizedBox(
-                      height: 300,
-                      width: 300,
+                      width: widget.part.size.width * widget.ratio,
+                      height: widget.part.size.height * widget.ratio,
                       child: StreamBuilder<List<PaintObject>>(
                         stream: objectStream.stream,
                         builder: (
@@ -186,7 +191,7 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
             IgnorePointer(
               child: Transform.scale(
                 alignment: Alignment.topLeft,
-                scale: 16,
+                scale: widget.part.size.width / 18 * widget.ratio,
                 child: SvgPicture.asset(
                   widget.part.asset,
                 ),

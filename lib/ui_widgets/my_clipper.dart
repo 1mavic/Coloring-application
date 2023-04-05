@@ -23,17 +23,25 @@ import 'package:flutter/material.dart';
 /// custom clipper. clips part of image with provided path
 class MyCustomClipper extends CustomClipper<Path> {
   /// custom clipper. clips part of image with provided path
-  MyCustomClipper(this.myPath);
+  MyCustomClipper(
+    this.width,
+    this.myPath,
+    this.ratio,
+  );
 
   /// path to use on clip
   final Path myPath;
+
+  final double ratio;
+
+  final double width;
 
   @override
   Path getClip(Size size) {
     // final center = Offset(size.width / 2 + 18, size.height / 2 - 9);
     // final matrix = Matrix4.identity()..translate(center.dx, center.dy);
     // final scaledPath = myPath.transform(matrix.storage);
-    return scalePath(myPath, 16);
+    return scalePath(myPath, width / 18 * ratio);
   }
 
   @override
