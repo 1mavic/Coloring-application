@@ -9,24 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// provider with current color to paint
-final pickedColorProvider =
-    StateNotifierProvider.autoDispose<_ColorNotifier, CustomColor>((ref) {
-  final allColors = ref.watch(colorsProvider);
-  return _ColorNotifier(allColors.first);
+final pickedColorProvider = StateProvider.autoDispose<CustomColor>((ref) {
+  // final allColors = ref.watch(colorsProvider);
+  // return _ColorNotifier(allColors.first);
+  return ref.watch(colorsProvider).first;
 });
 
-class _ColorNotifier extends StateNotifier<CustomColor> {
-  _ColorNotifier(super.state);
-
-  /// change picked color
-  void changeColor(CustomColor newColor) {
-    state = newColor;
-  }
-}
+// }
 
 /// provider to store previous picked color
 final prevColorProvider =
-    StateNotifierProvider.autoDispose<_PrevColorNotifier, CustomColor>((ref) {
+    StateNotifierProvider<_PrevColorNotifier, CustomColor>((ref) {
   final allColors = ref.watch(colorsProvider);
   return _PrevColorNotifier(allColors.first);
 });

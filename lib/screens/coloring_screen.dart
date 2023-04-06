@@ -3,8 +3,6 @@
 import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/models/coloring_picture.dart';
-import 'package:coloring_app/models/picture_part.dart';
-import 'package:coloring_app/providers/aspect_provider.dart';
 import 'package:coloring_app/providers/color_providers.dart';
 import 'package:coloring_app/ui_widgets/brush_pick.dart';
 import 'package:coloring_app/ui_widgets/color_picked.dart';
@@ -33,14 +31,6 @@ class _ColoringScreenState extends ConsumerState<ColoringScreen> {
     ref
         .read(patternColorsProvider.notifier)
         .loadPatterns(AppConstData.patternsImages);
-    // WidgetsBinding.instance.addPostFrameCallback((_) => checkRatio());
-  }
-
-  void checkRatio() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    ref.read(aspectProvider.notifier).changeAspect(
-          screenWidth / widget.picture.pictureSize.width,
-        );
   }
 
   @override
@@ -66,12 +56,20 @@ class _ColoringScreenState extends ConsumerState<ColoringScreen> {
                 aspectRatio: widget.picture.aspectRatio,
                 child: Stack(
                   children: [
-                    ...widget.picture.parts.map(
-                      (e) => PictureObject(
-                        part: e,
+                    ...List.generate(
+                      widget.picture.parts.length,
+                      (index) => PictureObject(
+                        part: widget.picture.parts[index],
                         ratio: ratio,
+                        index: index,
                       ),
                     ),
+                    // ...widget.picture.parts.map(
+                    //   (e) => PictureObject(
+                    //     part: e,
+                    //     ratio: ratio,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

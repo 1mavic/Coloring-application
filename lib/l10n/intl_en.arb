@@ -1,3 +1,6 @@
 {
-    "testColoringPage": "Test colouring page"
+    "testColoringPage": "Test colouring page",
+    "areYouShure": "Are you shure?",
+    "yes": "Yes",
+    "no": "No"
 }

@@ -28,9 +28,10 @@ class ColorPickerWidget extends ConsumerWidget {
             color: colorList[index],
             picked: pickedColor == colorList[index],
             onTap: () {
-              ref.read(pickedColorProvider.notifier).changeColor(
-                    colorList[index],
-                  );
+              ref.read(pickedColorProvider.notifier).state = colorList[index];
+              // ref.read(pickedColorProvider.notifier).changeColor(
+              //       colorList[index],
+              //     );
               ref.read(prevColorProvider.notifier).changePrevColor(
                     colorList[index],
                   );

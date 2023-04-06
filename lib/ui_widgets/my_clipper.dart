@@ -32,8 +32,11 @@ class MyCustomClipper extends CustomClipper<Path> {
   /// path to use on clip
   final Path myPath;
 
+  /// ratio to multiply size and offset.
+  /// to maintain aspectratio on different screens
   final double ratio;
 
+  /// initial width of object
   final double width;
 
   @override
