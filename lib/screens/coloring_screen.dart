@@ -75,6 +75,14 @@ class _ColoringScreenState extends ConsumerState<ColoringScreen> {
               ),
             ),
           ),
+          Positioned(
+            top: 100,
+            right: 50,
+            child: ElevatedButton(
+              child: Text('show/hide'),
+              onPressed: () {},
+            ),
+          ),
           const RepaintBoundary(
             child: Align(
               alignment: Alignment.centerRight,

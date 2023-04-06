@@ -18,7 +18,7 @@ class ColorPickerWidget extends ConsumerWidget {
     final pickedColor = ref.watch(pickedColorProvider);
     final pickedBrush = ref.watch(brushProvider);
     return SizedBox(
-      width: 250,
+      width: 110,
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -29,9 +29,6 @@ class ColorPickerWidget extends ConsumerWidget {
             picked: pickedColor == colorList[index],
             onTap: () {
               ref.read(pickedColorProvider.notifier).state = colorList[index];
-              // ref.read(pickedColorProvider.notifier).changeColor(
-              //       colorList[index],
-              //     );
               ref.read(prevColorProvider.notifier).changePrevColor(
                     colorList[index],
                   );

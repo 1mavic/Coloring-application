@@ -43,8 +43,6 @@ class PictureObject extends ConsumerStatefulWidget {
 
 class _PictureObjectState extends ConsumerState<PictureObject> {
   final List<PaintObject> objects = [];
-  // final List<PaintObject> history = [];
-  // late StreamController<List<PaintObject>> historyStream;
   late StreamController<List<PaintObject>> objectStream;
   late Path _path;
   @override
@@ -52,14 +50,12 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
     _path = parseSvgPath(
       widget.part.iconPath,
     );
-    // historyStream = StreamController.broadcast();
     objectStream = StreamController.broadcast();
     super.initState();
   }
 
   @override
   void dispose() {
-    // historyStream.close();
     objectStream.close();
     super.dispose();
   }
@@ -97,9 +93,10 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                   RepaintBoundary(
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final history =
-                            ref.watch(paintHistoryProvider)[widget.index];
-                        log('build consumer ${widget.index}');
+                        final history = ref.watch(
+                          paintHistoryProvider
+                              .select((value) => value[widget.index]),
+                        );
                         return CustomPaint(
                           painter: MyPainter(
                             objects: history,
@@ -110,10 +107,8 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                     ),
                   ),
                   GestureDetector(
-                    behavior: HitTestBehavior.translucent,
+                    behavior: HitTestBehavior.opaque,
                     onPanDown: (details) {
-                      // final color = ref.read(pickedColorProvider);
-                      // final size = ref.read(brushSizeProvider);
                       final brush = ref.read(brushProvider);
                       if (brush == BrushType.filling) {
                         objects.add(
@@ -151,13 +146,11 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                       objectStream.add(objects);
                     },
                     onPanEnd: (details) {
-                      // history.addAll(objects);
                       ref
                           .read(paintHistoryProvider.notifier)
                           .addToHistory(objects, widget.index);
                       objects.clear();
                       objectStream.add(objects);
-                      // historyStream.add(history);
                     },
                     child: SizedBox(
                       width: widget.part.size.width * widget.ratio,
