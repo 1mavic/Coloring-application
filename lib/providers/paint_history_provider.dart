@@ -22,6 +22,7 @@ class _PaintHistoryNotifier extends StateNotifier<List<List<PaintObject>>> {
   /// clear all history record. make inital state of coloring
   void clearHistory() {
     state = List.generate(state.length, (int index) => <PaintObject>[]);
+    _history.clear();
   }
 
   /// add record to history.
@@ -93,3 +94,9 @@ class _PaintHistoryNotifier extends StateNotifier<List<List<PaintObject>>> {
     }
   }
 }
+
+/// provider for undo button. if history records is empty return false
+final undoButtonProvider = Provider<bool>((ref) {
+  ref.watch(paintHistoryProvider);
+  return ref.watch(paintHistoryProvider.notifier)._history.isEmpty;
+});

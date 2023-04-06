@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/models/paint_object.dart';
@@ -79,7 +80,7 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
 
   @override
   Widget build(BuildContext context) {
-    final history = ref.watch(paintHistoryProvider)[widget.index];
+    log('build ${widget.index}');
     return Positioned(
       left: widget.part.coordinates.dx * widget.ratio,
       top: widget.part.coordinates.dy * widget.ratio,
@@ -94,37 +95,20 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
               child: Stack(
                 children: [
                   RepaintBoundary(
-                    child: CustomPaint(
-                      painter: MyPainter(
-                        objects: history,
-                      ),
-                      child: const SizedBox.expand(),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final history =
+                            ref.watch(paintHistoryProvider)[widget.index];
+                        log('build consumer ${widget.index}');
+                        return CustomPaint(
+                          painter: MyPainter(
+                            objects: history,
+                          ),
+                          child: const SizedBox.expand(),
+                        );
+                      },
                     ),
                   ),
-                  // StreamBuilder<List<PaintObject>>(
-                  //   stream: historyStream.stream,
-                  //   builder: (
-                  //     BuildContext context,
-                  //     AsyncSnapshot<List<PaintObject>> snapshot,
-                  //   ) {
-                  //     if (snapshot.hasData) {
-                  //       final data = snapshot.data;
-                  //       if (data != null) {
-                  //         return RepaintBoundary(
-                  //           child: CustomPaint(
-                  //             painter: MyPainter(
-                  //               objects: history,
-                  //             ),
-                  //             child: const SizedBox.expand(),
-                  //           ),
-                  //         );
-                  //       } else {
-                  //         return const SizedBox.expand();
-                  //       }
-                  //     }
-                  //     return const SizedBox.expand();
-                  //   },
-                  // ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onPanDown: (details) {

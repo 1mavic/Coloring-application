@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coloring_app/const_data.dart';
 import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/models/app_color.dart';
@@ -19,7 +21,6 @@ class BrushPickWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pickedBrushSize = ref.watch(brushSizeProvider);
     final pickedBrushType = ref.watch(brushProvider);
-    // final prevColor = ref.watch(prevColorProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -98,16 +99,22 @@ class BrushPickWidget extends ConsumerWidget {
         const SizedBox(
           height: 30,
         ),
-        _ItemButtonWidget(
-          picked: false,
-          onTap: () async {
-            ref.read(paintHistoryProvider.notifier).undo();
+        Consumer(
+          builder: (context, ref, child) {
+            final buttonDisabled = ref.watch(undoButtonProvider);
+            return _ItemButtonWidget(
+              picked: false,
+              disabled: buttonDisabled,
+              onTap: () async {
+                ref.read(paintHistoryProvider.notifier).undo();
+              },
+              child: const Icon(
+                Icons.undo,
+                color: Colors.white,
+                size: 40,
+              ),
+            );
           },
-          child: const Icon(
-            Icons.undo,
-            color: Colors.white,
-            size: 40,
-          ),
         ),
         const SizedBox(
           height: 10,
@@ -155,16 +162,18 @@ class _ItemButtonWidget extends StatelessWidget {
     required this.onTap,
     required this.picked,
     required this.child,
+    this.disabled = false,
   });
   final VoidCallback onTap;
   final bool picked;
   final Widget child;
+  final bool disabled;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: disabled ? null : onTap,
       child: ColoredBox(
-        color: Colors.blue,
+        color: disabled ? Colors.grey : Colors.blue,
         child: Padding(
           padding: const EdgeInsets.only(left: 10, bottom: 5, top: 5),
           child: AnimatedContainer(
