@@ -2,6 +2,7 @@ import 'package:coloring_app/models/app_color.dart';
 import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/providers/brush_providers.dart';
 import 'package:coloring_app/providers/color_providers.dart';
+import 'package:coloring_app/providers/menu_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,33 +18,45 @@ class ColorPickerWidget extends ConsumerWidget {
     final colorList = ref.watch(availableColorsProvider);
     final pickedColor = ref.watch(pickedColorProvider);
     final pickedBrush = ref.watch(brushProvider);
-    return SizedBox(
-      width: 250,
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) => Align(
-          alignment: Alignment.centerRight,
-          child: _PickerItem(
-            color: colorList[index],
-            picked: pickedColor == colorList[index],
-            onTap: () {
-              ref.read(pickedColorProvider.notifier).changeColor(
-                    colorList[index],
-                  );
-              ref.read(prevColorProvider.notifier).changePrevColor(
-                    colorList[index],
-                  );
-              if (pickedBrush == BrushType.eraser) {
-                ref.read(brushProvider.notifier).changeBrush(BrushType.brush);
-              }
-            },
+    final show = ref.watch(menuProvider);
+    final height = MediaQuery.of(context).size.height - kToolbarHeight;
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 400),
+      right: show ? 0 : -110,
+      child: RepaintBoundary(
+        child: SizedBox(
+          width: 110,
+          height: height,
+          child: Center(
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) => Align(
+                alignment: Alignment.centerRight,
+                child: _PickerItem(
+                  color: colorList[index],
+                  picked: pickedColor == colorList[index],
+                  onTap: () {
+                    ref.read(pickedColorProvider.notifier).state =
+                        colorList[index];
+                    ref.read(prevColorProvider.notifier).changePrevColor(
+                          colorList[index],
+                        );
+                    if (pickedBrush == BrushType.eraser) {
+                      ref
+                          .read(brushProvider.notifier)
+                          .changeBrush(BrushType.brush);
+                    }
+                  },
+                ),
+              ),
+              separatorBuilder: (_, __) => const SizedBox(
+                height: 10,
+              ),
+              itemCount: colorList.length,
+            ),
           ),
         ),
-        separatorBuilder: (_, __) => const SizedBox(
-          height: 10,
-        ),
-        itemCount: colorList.length,
       ),
     );
   }

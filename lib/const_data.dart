@@ -23,4 +23,10 @@ abstract class AppConstData {
     BrushType.filling,
     BrushType.eraser,
   ];
+
+  /// list of assets for pattern images coloring
+  static List<String> patternsImages = [
+    'assets/images/pattern.png',
+    'assets/images/glitter.jpg',
+  ];
 }

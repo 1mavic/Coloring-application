@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:coloring_app/models/brush_type.dart';
 import 'package:coloring_app/models/paint_object.dart';
 import 'package:coloring_app/models/picture_part.dart';
 import 'package:coloring_app/providers/brush_providers.dart';
 import 'package:coloring_app/providers/color_providers.dart';
+import 'package:coloring_app/providers/paint_history_provider.dart';
 import 'package:coloring_app/ui_widgets/my_clipper.dart';
 import 'package:coloring_app/ui_widgets/my_painter.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +23,26 @@ class PictureObject extends ConsumerStatefulWidget {
   /// that are painted separatly
   const PictureObject({
     required this.part,
+    required this.ratio,
+    required this.index,
     super.key,
   });
 
   /// part for display
   final PicturePart part;
+
+  /// ratio to multiply size and offset.
+  /// to maintain aspectratio on different screens
+  final double ratio;
+
+  /// index of picture part
+  final int index;
   @override
   ConsumerState<PictureObject> createState() => _PictureObjectState();
 }
 
 class _PictureObjectState extends ConsumerState<PictureObject> {
   final List<PaintObject> objects = [];
-  final List<PaintObject> history = [];
-  late StreamController<List<PaintObject>> historyStream;
   late StreamController<List<PaintObject>> objectStream;
   late Path _path;
   @override
@@ -41,14 +50,13 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
     _path = parseSvgPath(
       widget.part.iconPath,
     );
-    historyStream = StreamController.broadcast();
     objectStream = StreamController.broadcast();
     super.initState();
   }
 
   @override
   void dispose() {
-    historyStream.close();
+    objectStream.close();
     super.dispose();
   }
 
@@ -68,67 +76,61 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
 
   @override
   Widget build(BuildContext context) {
+    log('build ${widget.index}');
     return Positioned(
-      left: widget.part.coordinates.dx,
-      top: widget.part.coordinates.dy,
+      left: widget.part.coordinates.dx * widget.ratio,
+      top: widget.part.coordinates.dy * widget.ratio,
       child: ClipPath(
-        clipper: MyCustomClipper(_path),
+        clipper: MyCustomClipper(widget.part.size.width, _path, widget.ratio),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            SizedBox.fromSize(
-              size: widget.part.size,
+            SizedBox(
+              width: widget.part.size.width * widget.ratio,
+              height: widget.part.size.height * widget.ratio,
               child: Stack(
                 children: [
-                  StreamBuilder<List<PaintObject>>(
-                    stream: historyStream.stream,
-                    builder: (
-                      BuildContext context,
-                      AsyncSnapshot<List<PaintObject>> snapshot,
-                    ) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        if (data != null) {
-                          return RepaintBoundary(
-                            child: CustomPaint(
-                              painter: MyPainter(
-                                objects: history,
-                              ),
-                              child: const SizedBox.expand(),
-                            ),
-                          );
-                        } else {
-                          return const SizedBox.expand();
-                        }
-                      }
-                      return const SizedBox.expand();
-                    },
+                  RepaintBoundary(
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final history = ref.watch(
+                          paintHistoryProvider
+                              .select((value) => value[widget.index]),
+                        );
+                        return CustomPaint(
+                          painter: MyPainter(
+                            objects: history,
+                          ),
+                          child: const SizedBox.expand(),
+                        );
+                      },
+                    ),
                   ),
                   GestureDetector(
-                    behavior: HitTestBehavior.translucent,
+                    behavior: HitTestBehavior.opaque,
                     onPanDown: (details) {
-                      final color = ref.read(pickedColorProvider);
-                      final size = ref.read(brushSizeProvider);
                       final brush = ref.read(brushProvider);
                       if (brush == BrushType.filling) {
                         objects.add(
-                          PaintObject.fill(color: color),
+                          PaintObject.fill(
+                            color: ref.read(pickedColorProvider),
+                          ),
                         );
                         objectStream.add(objects);
                       } else {
                         objects.add(
                           PaintObject.dot(
                             point: details.localPosition,
-                            color: color,
-                            size: size,
+                            color: ref.read(pickedColorProvider),
+                            size: ref.read(brushSizeProvider),
                           ),
                         );
                         objectStream.add(objects);
                       }
                     },
                     onPanUpdate: (details) {
-                      final color = ref.read(pickedColorProvider);
-                      final size = ref.read(brushSizeProvider);
+                      // final color = ref.read(pickedColorProvider);
+                      // final size = ref.read(brushSizeProvider);
                       final brush = ref.read(brushProvider);
                       if (brush == BrushType.filling) {
                         return;
@@ -137,21 +139,22 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                         PaintObject.line(
                           start: objects.last.lastDot,
                           end: details.localPosition,
-                          color: color,
-                          size: size,
+                          color: ref.read(pickedColorProvider),
+                          size: ref.read(brushSizeProvider),
                         ),
                       );
                       objectStream.add(objects);
                     },
                     onPanEnd: (details) {
-                      history.addAll(objects);
+                      ref
+                          .read(paintHistoryProvider.notifier)
+                          .addToHistory(objects, widget.index);
                       objects.clear();
                       objectStream.add(objects);
-                      historyStream.add(history);
                     },
                     child: SizedBox(
-                      height: 300,
-                      width: 300,
+                      width: widget.part.size.width * widget.ratio,
+                      height: widget.part.size.height * widget.ratio,
                       child: StreamBuilder<List<PaintObject>>(
                         stream: objectStream.stream,
                         builder: (
@@ -161,11 +164,13 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
                           if (snapshot.hasData) {
                             final data = snapshot.data;
                             if (data != null) {
-                              return CustomPaint(
-                                painter: MyPainter(
-                                  objects: data,
+                              return RepaintBoundary(
+                                child: CustomPaint(
+                                  painter: MyPainter(
+                                    objects: data,
+                                  ),
+                                  child: const SizedBox.expand(),
                                 ),
-                                child: const SizedBox.expand(),
                               );
                             } else {
                               return const SizedBox.expand();
@@ -182,7 +187,7 @@ class _PictureObjectState extends ConsumerState<PictureObject> {
             IgnorePointer(
               child: Transform.scale(
                 alignment: Alignment.topLeft,
-                scale: 16,
+                scale: widget.part.size.width / 18 * widget.ratio,
                 child: SvgPicture.asset(
                   widget.part.asset,
                 ),
