@@ -26,7 +26,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      showPerformanceOverlay: true,
+      // showPerformanceOverlay: true,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
