@@ -5,6 +5,8 @@ import 'package:coloring_app/config/flavors/flavors.dart';
 import 'package:coloring_app/generated/l10n.dart';
 import 'package:coloring_app/providers/picture_provider.dart';
 import 'package:coloring_app/screens/coloring_screen.dart';
+import 'package:coloring_app/screens/second_test.dart';
+import 'package:coloring_app/screens/test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,12 +41,13 @@ class MyApp extends ConsumerWidget {
         //
         primarySwatch: Colors.blue,
       ),
-      home: FlavorBanner(
-        flavor: flavor,
-        child: ColoringScreen(
-          picture: ref.watch(pictureProvider),
-        ),
-      ),
+      home: TestScreen(),
+      // home: FlavorBanner(
+      //   flavor: flavor,
+      //   child: ColoringScreen(
+      //     picture: ref.watch(pictureProvider),
+      //   ),
+      // ),
     );
   }
 }

@@ -39,6 +39,8 @@ dependencies:
   freezed_annotation: ^2.2.0
   hooks_riverpod: ^2.3.2
   intl: ^0.18.0
+  image_compare: ^1.1.2
+  path_provider: ^2.0.14
   json_annotation: ^4.8.0
   json_serializable: ^6.6.1
   path_drawing: ^1.0.1
